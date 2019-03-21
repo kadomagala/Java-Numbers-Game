@@ -1,10 +1,10 @@
 package sample;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Label;
-
-import java.time.Duration;
+import javafx.util.Duration;
 
 public class NumberLabel extends Label {
     private int row;
@@ -16,9 +16,10 @@ public class NumberLabel extends Label {
     }
 
     private void bindToNumberBean() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.ofMillis(250),
-                event -> if(Strip.strip.containsValue(new Cordinates(row,col)))
-                    setText(Strip.strip.);
-                            ))
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(250),
+                event -> setText((Strip.strip[row][col] == -1) ? "" : String.valueOf(Strip.strip[row][col]))),
+                new KeyFrame(Duration.millis(250)));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
     }
 }
