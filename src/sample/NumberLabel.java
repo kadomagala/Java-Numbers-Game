@@ -24,8 +24,8 @@ public class NumberLabel extends Label {
 
     private void bindToNumberBean() {
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(250),
-                event -> setText((Strip.strip[row][col] == -1) ? "" : String.valueOf(Strip.strip[row][col]))),
-                new KeyFrame(Duration.millis(250)));
+                event -> setText((Strip.strip[row][col] == -1) ? "  " : String.valueOf(Strip.strip[row][col]))),
+                new KeyFrame(Duration.millis(2500)));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
     }
