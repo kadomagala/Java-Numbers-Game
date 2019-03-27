@@ -32,8 +32,10 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-
-        Strip.Init(10,10, 10);
+        int numOfBeans = 10;
+        int width = 10;
+        int height = 10;
+        Strip.Init(numOfBeans,width, height);
         Thread [] threads = new Thread[Strip.numOfBeans];
         Runnable[] runnables = new Runnable[Strip.numOfBeans];
 
