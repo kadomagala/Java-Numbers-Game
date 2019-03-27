@@ -26,6 +26,7 @@ public class Strip {
         zeroBean.setValue(0);
         zeroBean.setCords(cordinates);
         zeroBean.isPrime = false;
+        beans[0] = zeroBean;
         for (int i = 1; i < numOfBeans; i++) {
             int value = r.nextInt(10 * numOfBeans) + 1;
 

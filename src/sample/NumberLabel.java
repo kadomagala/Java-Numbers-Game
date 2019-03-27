@@ -4,6 +4,11 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class NumberLabel extends Label {
@@ -13,6 +18,8 @@ public class NumberLabel extends Label {
         this.row= row;
         this.col = col;
         bindToNumberBean();
+        this.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+
     }
 
     private void bindToNumberBean() {
