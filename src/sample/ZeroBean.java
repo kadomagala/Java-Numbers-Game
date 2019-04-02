@@ -4,11 +4,28 @@ import java.beans.*;
 import java.io.Serializable;
 import java.util.Random;
 
-public class ZeroBean implements VetoableChangeListener, Serializable, Runnable {
+public class ZeroBean implements Serializable, Runnable {
 
 
-    private Cordinates zeroCords = new Cordinates();
+    private volatile Cordinates zeroCords = new Cordinates();
     private PropertyChangeSupport chg = new PropertyChangeSupport(this);
+    private StripModel model;
+
+    public synchronized PropertyChangeSupport getChg() {
+        return chg;
+    }
+
+    public synchronized void setChg(PropertyChangeSupport chg) {
+        this.chg = chg;
+    }
+
+    public synchronized StripModel getModel() {
+        return model;
+    }
+
+    public synchronized void setModel(StripModel model) {
+        this.model = model;
+    }
 
     public ZeroBean() { }
 
@@ -19,13 +36,7 @@ public class ZeroBean implements VetoableChangeListener, Serializable, Runnable 
     public synchronized void setZeroCords(Cordinates zeroCords) {
         Cordinates oldCords = new Cordinates(this.zeroCords.getX(), this.zeroCords.getY());
         chg.firePropertyChange("zeroCords", oldCords, zeroCords);
-        if(NumberBean.primeNumber(Strip.strip[zeroCords.getX()][zeroCords.getY()]))
-            Strip.strip[oldCords.getX()][oldCords.getY()] = Strip.strip[zeroCords.getX()][zeroCords.getY()];
-        else
-            Strip.strip[oldCords.getX()][oldCords.getY()] = -1;
-        Strip.strip[zeroCords.getX()][zeroCords.getY()] = 0;
-        this.zeroCords.setX(zeroCords.getX());
-        this.zeroCords.setY(zeroCords.getY());
+        this.zeroCords = zeroCords;
     }
 
     public synchronized void addPropertyChangeListener(PropertyChangeListener l){
@@ -36,23 +47,16 @@ public class ZeroBean implements VetoableChangeListener, Serializable, Runnable 
         chg.removePropertyChangeListener(l);
     }
 
-    @Override
-    public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
-        if (evt.getPropertyName().equals("cords")) {
-            if (evt.getNewValue() == zeroCords)
-                throw new PropertyVetoException("Can't choose this pos", evt);
-        }
-    }
 
 
     @Override
     public void run() {
         Random r = new Random();
-        while(Strip.numbersLeft > 0) {
+        while(true) {
             for (int i = 0; i < 2; i++) {
                 if (r.nextBoolean()) { //OX
                     if (r.nextBoolean()) { //PRAWO
-                        if (zeroCords.getX() + 1 < Strip.rows) {
+                        if (zeroCords.getX() + 1 < model.getWidth()) {
                             setZeroCords(new Cordinates(zeroCords.getX() + 1, zeroCords.getY()));
                             break;
                         }
@@ -69,7 +73,7 @@ public class ZeroBean implements VetoableChangeListener, Serializable, Runnable 
                             break;
                         }
                     } else {
-                        if (zeroCords.getY() + 1 < Strip.cols) {
+                        if (zeroCords.getY() + 1 < model.getHeight()) {
                             setZeroCords(new Cordinates(zeroCords.getX(), zeroCords.getY() + 1));
                             break;
                         }
@@ -77,11 +81,11 @@ public class ZeroBean implements VetoableChangeListener, Serializable, Runnable 
                 }
             }
             try {
-                int delay = r.nextInt(500) + 300;
-
+                //int delay = r.nextInt(500) + 300;
+                int delay = 500;
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
-
+                e.printStackTrace();
             }
         }
     }
